@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FIVESTAR STUDIO AI TOOLS</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body class="home">
+  <div class="container">
+    <h1>FIVESTAR STUDIO AI TOOLS</h1>
+    <p>Explore powerful AI features exclusive for Fivestar Studio.</p>
+    <a href="gemini.html" class="button">Gemini Image</a>
+    <a href="chat.html" class="button">Gemini Chat</a>
+    <a href="#" class="button" id="livePortraitLink">Live Potrait</a>
+    <a href="#" class="button" id="comfyUILink">Comfy UI</a>
+    <a href="#" class="button" id="hunyuan3DLink">Hunyuan3D</a>
+
+    <script>
+      // Fungsi untuk memeriksa dan mengarahkan berdasarkan status port
+      function checkPortAndRedirect(url, port) {
+        fetch(url, { method: 'HEAD' })
+          .then(response => {
+            if (response.ok) {
+              window.location.href = url;
+            } else {
+              // Cek port lainnya (comfyUI atau hunyuan3D atau lainnya)
+              fetch(`http://192.168.1.31:${port}`, { method: 'HEAD' })
+                .then(responseComfyUI => {
+                  if (responseComfyUI.ok) {
+                    window.location.href = `http://192.168.1.31:${port}`;
+                  } else {
+                    window.location.href = 'off.html'; // Arahkan ke off.html jika kedua port tidak tersedia
+                  }
+                })
+                .catch(errorComfyUI => {
+                  window.location.href = 'off.html'; // Arahkan ke off.html jika terjadi error pada port
+                });
+            }
+          })
+          .catch(error => {
+            window.location.href = 'off.html'; // Arahkan ke off.html jika terjadi error pada port pertama
+          });
+      }
+
+      // Event listener untuk tombol Live Potrait
+      document.getElementById('livePortraitLink').addEventListener('click', function (event) {
+        event.preventDefault();
+        checkPortAndRedirect('http://192.168.1.31:8002/', 8000);
+      });
+
+      // Event listener untuk tombol Comfy UI
+      document.getElementById('comfyUILink').addEventListener('click', function (event) {
+        event.preventDefault();
+        checkPortAndRedirect('http://192.168.1.31:8000/', 8002);
+      });
+
+      // Event listener untuk tombol Hunyuan3D
+      document.getElementById('hunyuan3DLink').addEventListener('click', function (event) {
+        event.preventDefault();
+        checkPortAndRedirect('http://192.168.1.31:8001/', 8002);
+      });
+    </script>
+
+
+
+  </div>
+</body>
+
+</html>
